@@ -1,4 +1,4 @@
-" Last-modified: Fri Mar 16, 2012 12:23:04 PDT
+" Last-modified: Thu Sep 12, 2013 10:22:56 PDT
 
 " Use Vim settings, rather then Vi settings (much better!).
 set nocompatible
@@ -37,13 +37,19 @@ set copyindent
 set selectmode=mouse
 
 " set total line length
-set textwidth=100
+set textwidth=120
 
 " For Python
-autocmd FileType python set ts=4 sw=4 et textwidth=100
+autocmd FileType python set ts=4 sw=4 et textwidth=120
+
+" For Ruby
+autocmd FileType ruby set ts=2 sw=2 et textwidth=120
 
 " For Text
-autocmd FileType text set textwidth=100
+autocmd FileType text set textwidth=120
+
+" For Gherkin
+au Bufread,BufNewFile *.feature set filetype=gherkin
 
 " do not keep a backup files
 " set nobackup
@@ -84,9 +90,9 @@ set scs
 " Set 'g' substitute flag on
 " set gdefault
 
-" This is totally awesome - remap jj to escape in insert mode.  You'll never type jj anyway, so it's great!
 inoremap jk <Esc>
 imap hh =>
+imap jj ->
 imap uu _
 
 nnoremap JJJJ <Nop>
