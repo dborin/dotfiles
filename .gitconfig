@@ -1,9 +1,5 @@
-[user]
-  name = David Borin
-  email = david.borin@rackspace.com
-[github]
-  user = dborin-rackspace
-  token = fe5041c5b1087944ac8da68e0712c1c1
+[include]
+  path = .gitconfig.local
 [color]
   ui = auto
   branch = auto
