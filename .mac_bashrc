@@ -85,14 +85,14 @@ function localmac {
 }
 
 function ruby_version {
-    echo `ruby -e "print RUBY_VERSION"`
+    rbenv version | sed s'/^\([0-9p\.-]*\) .*/\1/' 
 }
 
 function parse_git_branch {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/\* \(.*\)/ (\1)/'
 }
 
-PS1="${RED}\$(ruby_version) ${BLUE}\$(pwdPath)\n${CYAN}\$(parse_git_branch)${LIGHT_GRAY} \t ${LIGHT_YELLOW}[\u@\$(localmac)]${COLOR_NONE} \\$ "
+PS1="${RED}(\$(ruby_version)) ${BLUE}\$(pwdPath)\n${CYAN}\$(parse_git_branch)${LIGHT_GRAY} \t ${LIGHT_YELLOW}[\u@\$(localmac)]${COLOR_NONE} \\$ "
 #export PS1="\n[\u@macbook] \$(pwdPath)\n\[\e[0;92m\]\$(parse_git_branch)\[\e[0m\] \t \\$ "
 export INTERACTIVE_SHELL=1
 export LS_OPTIONS='--color=auto'
