@@ -1,7 +1,10 @@
-" Last-modified: Mon Oct 20, 2014 06:32:10 PDT
+" Last-modified: Tue Feb 10, 2015 03:55:21 PST
 
 " Use Vim settings, rather then Vi settings (much better!).
 set nocompatible
+
+" Tell VIM that my terminal supports 256 colors
+set t_Co=256
 
 " https://github.com/tpope/vim-pathogen
 execute pathogen#infect()
@@ -16,7 +19,7 @@ syntax enable
 if has("gui_running")
   colorscheme candycode2
 else
-  colorscheme ChocolateLiquor
+  colorscheme candycode2
 endif
 
 hi Normal guibg=NONE ctermbg=NONE
@@ -27,12 +30,11 @@ set guifont=Menlo\ Regular:h12"
 " set line numbering on
 set number
 
-" Turn on transparency (Only in MacVim)
-set transparency=20
-
-
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
+
+" Make double-<Esc> clear search highlights
+nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
 
 " Set 4 spaces for indenting
 set shiftwidth=2
@@ -53,16 +55,16 @@ set copyindent
 set selectmode=mouse
 
 " set total line length
-set textwidth=120
+set textwidth=140
 
 " For Python
-autocmd FileType python set ts=4 sw=4 et textwidth=120
+autocmd FileType python set ts=4 sw=4 et textwidth=140
 
 " For Ruby
-autocmd FileType ruby set ts=2 sw=2 et textwidth=120
+autocmd FileType ruby set ts=2 sw=2 et textwidth=140
 
 " For Text
-autocmd FileType text set textwidth=120
+autocmd FileType text set textwidth=140
 
 " For Gherkin
 au Bufread,BufNewFile *.feature set filetype=gherkin
@@ -228,7 +230,7 @@ map <c-a> ggVG
 imap <c-z> <c-o>u
 
 " Map CTRL-N to open/close NERDTree
-map <C-M-n> :NERDTreeToggle<CR>
+map <C-x> :NERDTreeToggle<CR>
 
 
 " ************************************************************************
@@ -251,8 +253,8 @@ if has("autocmd")
     \ endif
 
   " Normally don't automatically format 'text' as it is typed, only do this
-  " with comments, at 120 characters.
-  au BufNewFile,BufEnter *.c,*.h,*.java,*.jsp,*.sh,*.bash,*.pl,*.cgi,*.rb,*.py set formatoptions-=t tw=120
+  " with comments, at 140 characters.
+  au BufNewFile,BufEnter *.c,*.h,*.java,*.jsp,*.sh,*.bash,*.pl,*.cgi,*.rb,*.py set formatoptions-=t tw=140
 
   " add an autocommand to update an existing time stamp when writing the file
   " It uses the functions above to replace the time stamp and restores cursor
@@ -286,15 +288,6 @@ if has("gui")
 
   " hide the mouse when characters are typed
   set mousehide
-endif
-
-" Highlight lines over 120 columns
-if has('matchadd')
-    :au BufWinEnter * let w:m1=matchadd('Search', '\%<101v.\%>120v', -1)
-    :au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>120v.\+', -1)
-else
-    :au BufRead,BufNewFile * syntax match Search /\%<101v.\%>120v/
-    :au BufRead,BufNewFile * syntax match ErrorMsg /\%>120v.\+/
 endif
 
 " Show trailing whitespace or tag/space in blinding red
@@ -331,6 +324,17 @@ iab YDATETIME <c-r>=strftime(": %a %b %d, %Y %H:%M:%S %Z")<cr>
 " ************************************************************************
 "  F U N C T I O N S
 "
+
+" Highlight lines over 140 columns
+function! LongLines()
+    if has('matchadd')
+        :au BufWinEnter * let w:m1=matchadd('Search', '\%<101v.\%>140v', -1)
+        :au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>140v.\+', -1)
+    else
+        :au BufRead,BufNewFile * syntax match Search /\%<101v.\%>140v/
+        :au BufRead,BufNewFile * syntax match ErrorMsg /\%>140v.\+/
+    endif
+endfunction
 
 " first add a function that returns a time stamp in the desired format
 if !exists("*TimeStamp")
@@ -376,11 +380,5 @@ function! TrimSpaces() range
 endfunction
 
 command! -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
+command! -bar LongLines call LongLines()
 command! -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
-nnoremap <F12>     :ShowSpaces 1<CR>
-nnoremap <S-F12>   m`:TrimSpaces<CR>``
-vnoremap <S-F12>   :TrimSpaces<CR>
-
-" autocmd BufWritePre *.py :TrimSpaces
-
-" autocmd BufWritePost .vimrc source %

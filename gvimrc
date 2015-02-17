@@ -1,4 +1,4 @@
-" Last-modified: Mon Oct 20, 2014 06:24:21 PDT
+" Last-modified: Tue Oct 21, 2014 09:09:56 PDT
 
 " set the color scheme
 colorscheme candycode2
@@ -16,6 +16,9 @@ if has("gui")
 endif
 
 if has("gui_running")
+
+  " Turn on transparency (Only in MacVim)
+  set transparency=20
   " set size
   set lines=80 columns=250
   " 2 for the status line.

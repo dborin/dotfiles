@@ -21,6 +21,8 @@ unalias ll 2>/dev/null
 
 export HISTSIZE=50000
 export HISTCONTROL=erasedups
+export GREP_COLOR='1;37;46'
+
 shopt -s histappend
 
 alias 1='fg %1'
@@ -42,6 +44,9 @@ alias ld='ls -dA'
 alias h='history 100'
 alias Cat='echo;cat'
 alias env='env|sort'
+alias gga='git log --graph --pretty=format:"%C(bold yellow)%h %Creset%C(cyan)(%cr)%Creset %C(bold red)%d%Creset%C(white) %s %Creset%C(green)[%cn]"'
+alias gg='gga -n `expr $LINES / 2`'
+alias ggs='gga --stat'
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
@@ -92,11 +97,12 @@ function parse_git_branch {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/\* \(.*\)/ (\1)/'
 }
 
-PS1="${RED}(\$(ruby_version)) ${BLUE}\$(pwdPath)\n${CYAN}\$(parse_git_branch)${LIGHT_GRAY} \t ${LIGHT_YELLOW}[\u@\$(localmac)]${COLOR_NONE} \\$ "
+export PS1="${RED}(\$(ruby_version)) ${BLUE}\$(pwdPath)\n${CYAN}\$(parse_git_branch)${LIGHT_GRAY} \D{%T %Z} ${LIGHT_YELLOW}[\u@\$(localmac)]${COLOR_NONE} \\$ "
 #export PS1="\n[\u@macbook] \$(pwdPath)\n\[\e[0;92m\]\$(parse_git_branch)\[\e[0m\] \t \\$ "
 export INTERACTIVE_SHELL=1
 export LS_OPTIONS='--color=auto'
-export TERM="xterm-color"
+#export TERM="xterm-color"
+export TERM=xterm-256color
 export CLICOLOR=1
 export LSCOLORS="Gxagexbxcxegedabacafad"
 
@@ -139,6 +145,9 @@ function update-selenium {
 function goback {
     cd $OLDPWD
 }
+function hf {
+    grep -n "$@" ~/.bash_history | more
+}
 function vt {
     mvim --remote-tab $@ > /dev/null 2>&1
 }
@@ -151,6 +160,12 @@ function slow {
 function chars {
     count=`echo $@ | wc -c`
     echo $(( $count-1 ))
+}
+function klone {
+    git clone git@github.com:$@
+}
+function lsklone {
+    git clone git@code.livingsocial.net:$@
 }
 function r {
    fc -e - $@
