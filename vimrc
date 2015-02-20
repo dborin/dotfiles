@@ -1,4 +1,4 @@
-" Last-modified: Tue Feb 10, 2015 03:55:21 PST
+" Last-modified: Fri Feb 20, 2015 05:30:22 PST
 
 " Use Vim settings, rather then Vi settings (much better!).
 set nocompatible
@@ -111,8 +111,6 @@ inoremap jk <Esc>
 imap hh =>
 imap jj ->
 imap uu _
-
-nnoremap JJJJ <Nop>
 
 " Setup NERDtree
 let NERDTreeShowHidden=1
@@ -229,7 +227,7 @@ map <c-a> ggVG
 " Undo in insert mode.
 imap <c-z> <c-o>u
 
-" Map CTRL-N to open/close NERDTree
+" Map CTRL-X to open/close NERDTree.  Still seems to also use CTRL-N in MacVIM
 map <C-x> :NERDTreeToggle<CR>
 
 
