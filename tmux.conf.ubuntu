@@ -1,0 +1,73 @@
+set-option -g default-shell /bin/zsh
+set -g default-terminal "xterm-256color"
+set -g status-fg colour214
+set -g status-bg colour235
+
+# border colour
+set -g pane-border-fg colour006
+set -g pane-border-bg default
+set -g pane-active-border-fg colour006
+set -g pane-active-border-bg default
+
+# command/message line colors
+set -g message-fg colour014
+set -g message-bg default
+set -g message-attr bright
+
+# prefix settings
+set -g prefix C-a
+bind C-a send-prefix
+unbind C-b
+unbind x
+
+# set window list colors - yellow for active and grey for inactive
+set-window-option -g window-status-fg colour245
+set-window-option -g window-status-bg default
+set-window-option -g window-status-attr dim
+
+set-window-option -g window-status-current-fg colour214
+set-window-option -g window-status-current-bg default
+set-window-option -g window-status-current-attr bright
+
+# use PREFIX | to split window horizontally and PREFIX - to split vertically
+bind | split-window -h
+bind - split-window -v
+
+# map Vi movement keys as pane movement keys
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# and use C-h and C-l to cycle thru panes
+bind -r C-h select-window -t :-
+bind -r C-l select-window -t :+
+
+set -g history-limit 100000            # scrollback buffer n lines
+set -g base-index 1                    # start window indexing at one instead of zero
+set -g status-utf8 on
+set -g status-interval 15              # set update frequency
+set -g status-justify centre           # center window list for clarity
+
+# status bar config
+set -g status-left-length 100
+set -g status-left "#[fg=colour226]#(ifconfig en0 | grep 'inet ' | awk '{print \"en0 \" $2}') #(ifconfig wlan0 | grep 'inet ' | awk '{print \"wlan0 \" $2}') #[fg=colour10]#(ifconfig tun0 | grep 'inet ' | awk '{print \"vpn \" $2}') "
+#set -g status-right-length 80
+set -g status-right "#[fg=colour45]#(echo \"`date +'%d%b%Y  %H:%M %Z %z'`\" | tr [a-z] [A-Z])"
+
+# reload .tmux.conf
+bind r source-file ~/.tmux.conf \; display "Reloaded!" # reload ~/.tmux.conf using PREFIX r
+
+# reorder windows (i.e. one was deleted, so you have #1, #2, #4, #5)
+bind R move-window -r\; display-message "Windows reordered..." # re-order window numbers
+
+# window renaming
+bind Z command-prompt "rename-window '%%'"
+bind z set-window-option automatic-rename "on"
+
+bind -t vi-copy y copy-pipe "xclip -sel clip -i"
+
+setw -g mode-keys vi
+run-shell ~/.tmux/plugins/yank.tmux
+
+bind-key C-a last-window
