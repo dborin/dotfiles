@@ -1,7 +1,16 @@
-" Last-modified: Fri Feb 20, 2015 05:30:22 PST
+" Last-modified: Thu Oct 29, 2015 05:10:41 PDT
+
+" Put swapfiles into their own directory
+set directory=$HOME/.vim/swapfiles//
 
 " Use Vim settings, rather then Vi settings (much better!).
 set nocompatible
+
+" copy to OS clipboard
+set clipboard=unnamed
+
+" set leader
+:let mapleader = ","
 
 " Tell VIM that my terminal supports 256 colors
 set t_Co=256
@@ -9,8 +18,8 @@ set t_Co=256
 " https://github.com/tpope/vim-pathogen
 execute pathogen#infect()
 
-" Turn on the verboseness to see everything vim is doing.
-" set verbose=9
+let g:auto_save = 0 " turn on autosave at startup
+let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
 
 " make sure that things show up in color
 syntax enable
@@ -19,16 +28,21 @@ syntax enable
 if has("gui_running")
   colorscheme candycode2
 else
-  colorscheme candycode2
+  colorscheme ir_black
 endif
 
-hi Normal guibg=NONE ctermbg=NONE
+hi Search cterm=NONE ctermfg=red ctermbg=yellow
+hi IncSearch term=NONE cterm=NONE ctermfg=red ctermbg=yellow
 
 " set the font
 set guifont=Menlo\ Regular:h12"
 
 " set line numbering on
 set number
+
+" Add ctrlp
+set runtimepath^=~/.vim/bundle/ctrlp.vim
+map <C-p> :CtrlP<CR>
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
@@ -115,6 +129,10 @@ imap uu _
 " Setup NERDtree
 let NERDTreeShowHidden=1
 let g:NERDTreeWinSize = 30
+" Map CTRL-X to open/close NERDTree.  Still seems to also use CTRL-N in MacVIM
+map <C-x> :NERDTreeToggle<CR>
+" Close vim even if NERDTree is the only thing open
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 " Set status line
 set statusline=%F%m%r%h%w\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [LEN=%L]\ %4l,%02c%2V\ %p%%
@@ -150,6 +168,10 @@ let java_mark_braces_in_parens_as_errors=1
 
 " highlight strings inside C comments
 let c_comment_strings=1
+
+set hlsearch  " highlight matches
+
+"set hl=l:Visual " make highlights easier to see
 
 " Commands for :Explore
 let g:explVertical=1    " open vertical split winow
@@ -214,11 +236,11 @@ map <c-s> :w<cr>
 imap <c-s> <c-o><c-s>
 
 " Buffer naviation
-map <M-Left> :bprevious<CR>
-map <M-Right> :bnext<CR>
+map <Leader>bp :bprevious<CR>
+map <Leader>bn :bnext<CR>
 
-map <C-Left> <Esc>:tabprev<CR>
-map <C-Right> <Esc>:tabnext<CR>
+map <C-h> <Esc>:tabprev<CR>
+map <C-l> <Esc>:tabnext<CR>
 map <C-n> <Esc>:tabnew <Enter>
 
 " Select all.
@@ -226,9 +248,6 @@ map <c-a> ggVG
 
 " Undo in insert mode.
 imap <c-z> <c-o>u
-
-" Map CTRL-X to open/close NERDTree.  Still seems to also use CTRL-N in MacVIM
-map <C-x> :NERDTreeToggle<CR>
 
 
 " ************************************************************************
@@ -260,9 +279,6 @@ if has("autocmd")
   autocmd BufWritePre,FileWritePre *   ks|call UpdateTimeStamp()|'s
 
 endif " has("autocmd")
-
-" Close vim even if NERDTree is the only thing open
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 " Reload the .vimrc or .gvimrc if it is edited
 augroup myvimrc
