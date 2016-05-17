@@ -1,9 +1,17 @@
+export VIRTUAL_ENV_DISABLE_PROMPT=yes
+if [[ -z $VIRTUAL_ENV ]] then
+    local venv=''
+else
+    local venv='%{$terminfo[bold]$fg[green]%}‹${VIRTUAL_ENV##*/}›%{$reset_color%}'
+fi
+
 # ZSH Theme - Preview: http://gyazo.com/8becc8a7ed5ab54a0262a470555c3eed.png
-local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
+local return_code="%(?..%{$fg[red]%}%? ↵ %{$reset_color%})"
 
 #local user_host='%{$terminfo$fg[202]%}%n@%m%{$reset_color%}'
 local user_host='%{$terminfo[bold]$FG[220]%}%n@%m%{$reset_color%}'
 local current_dir='%{$terminfo[bold]$FG[014]%} %~%{$reset_color%}'
+local current_time='%{$fg[cyan]%}%*%{$reset_color%}'
 local rvm_ruby=''
 if which rvm-prompt &> /dev/null; then
   rvm_ruby='%{$terminfo[bold]$fg[red]%}‹$(rvm-prompt i v g)›%{$reset_color%}'
@@ -14,9 +22,8 @@ else
 fi
 local git_branch='$(git_prompt_info)%{$reset_color%}'
 
-PROMPT="╭─${user_host} ${current_dir} ${rvm_ruby} ${git_branch}
-╰─%B$%b "
-RPS1="${return_code}"
+PROMPT="╭─${user_host} ${current_dir} ${venv} ${rvm_ruby} ${git_branch}
+╰─${current_time} ${return_code} %B$%b "
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$terminfo[bold]$FG[251]%}‹"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$terminfo[bold]$FG[251]%}›%{$reset_color%}"
