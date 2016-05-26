@@ -11,10 +11,10 @@ ZSH_THEME="dborin-bira"
 CASE_SENSITIVE="true"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
+DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
+export UPDATE_ZSH_DAYS=7
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -36,7 +36,7 @@ COMPLETION_WAITING_DOTS="true"
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
 # The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
+HIST_STAMPS="yyyy-mm-dd"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -72,19 +72,17 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-
-if [[ "$TERM" != "screen" ]] &&
-        [[ "$SSH_CONNECTION" == "" ]]; then
-    # Attempt to discover a detached session and attach
-    # it, else create a new session
-
-    WHOAMI=$(whoami)
-    if tmux has-session -t $WHOAMI 2>/dev/null; then
-        tmux attach-session -t $WHOAMI
-    else
-        tmux new-session -s $WHOAMI
+#
+# disable history sharing between panes
+#setopt append_history no_inc_append_history no_share_history
+#
+function startmux {
+    if [[ "$TERM" != "screen" ]] &&
+            [[ "$SSH_CONNECTION" == "" ]]; then
+         tmux attach &> /dev/null
+         if [[ "$TMUX" = "" ]]; then tmux; fi
     fi
-fi
+}
 
 CURRENT_VIRTUALENV="primary"
 export EDITOR=vim
@@ -125,6 +123,8 @@ export WORKON_HOME=$HOME/.python_virtualenvs
 source /usr/local/bin/virtualenvwrapper.sh
 export PIP_VIRTUALENV_BASE=$WORKON_HOME
 export PIP_RESPECT_VIRTUALENV=true
+
+#export RUBYLIB=$HOME/git/ls_code/myqa-commandline/lib:$RUBYLIB
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -223,3 +223,6 @@ python_autoenv () {
 }
 
 python_autoenv
+
+source ~/EnvScripts/myqa.sh
+source ~/EnvScripts/myqa_nova.sh
