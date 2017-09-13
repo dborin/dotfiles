@@ -1,7 +1,7 @@
-" Last-modified: Thu Oct 29, 2015 05:10:41 PDT
+" Last-modified: Wed Sep 13, 2017 10:20:22 PDT
 
 " Put swapfiles into their own directory
-set directory=$HOME/.vim/swapfiles//
+set directory=$HOME/.vim/swapfiles/
 
 " Use Vim settings, rather then Vi settings (much better!).
 set nocompatible
@@ -24,23 +24,17 @@ let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
 " make sure that things show up in color
 syntax enable
 
-" set the color scheme
-if has("gui_running")
-  colorscheme candycode2
-else
-  colorscheme ir_black
-endif
+colorscheme dborin_vividchalk
 
 hi Search cterm=NONE ctermfg=red ctermbg=yellow
 hi IncSearch term=NONE cterm=NONE ctermfg=red ctermbg=yellow
 
-" set the font
-set guifont=Menlo\ Regular:h12"
-
 " set line numbering on
 set number
+set numberwidth=3
 
 " Add ctrlp
+" https://ctrlpvim.github.io/ctrlp.vim/#installation
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 map <C-p> :CtrlP<CR>
 
@@ -51,7 +45,7 @@ set backspace=indent,eol,start
 nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
 
 " Set 4 spaces for indenting
-set shiftwidth=2
+set shiftwidth=4
 
 " Set 4 spaces for stops
 set tabstop=2
@@ -75,13 +69,16 @@ set textwidth=140
 autocmd FileType python set ts=4 sw=4 et textwidth=140
 
 " For Ruby
-autocmd FileType ruby set ts=2 sw=2 et textwidth=140
+autocmd FileType ruby set ts=4 sw=4 et textwidth=140
 
 " For Text
 autocmd FileType text set textwidth=140
 
 " For Gherkin
 au Bufread,BufNewFile *.feature set filetype=gherkin
+
+" For oh-my-zsh themes
+au Bufread,BufNewFile *.zsh-theme set filetype=sh
 
 " Use Node.js for JavaScript interpretation
 let $JS_CMD='node'
@@ -118,9 +115,6 @@ set smartcase
 " smart search (override 'ic' when pattern has uppers)
 set scs
 
-" Set 'g' substitute flag on
-" set gdefault
-
 inoremap jk <Esc>
 imap hh =>
 imap jj ->
@@ -129,26 +123,21 @@ imap uu _
 " Setup NERDtree
 let NERDTreeShowHidden=1
 let g:NERDTreeWinSize = 30
-" Map CTRL-X to open/close NERDTree.  Still seems to also use CTRL-N in MacVIM
+" Map CTRL-X to open/close NERDTree.
 map <C-x> :NERDTreeToggle<CR>
 " Close vim even if NERDTree is the only thing open
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Set status line
 set statusline=%F%m%r%h%w\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [LEN=%L]\ %4l,%02c%2V\ %p%%
 
 " now set it up to change the status line based on mode
 au InsertEnter * hi statusline ctermfg=white ctermbg=darkred gui=bold
-au InsertLeave * hi statusline ctermfg=black ctermbg=gray gui=bold
+au InsertLeave * hi statusline ctermfg=white ctermbg=darkgray gui=bold
 
 " Always display a status line at the bottom of the window
 set laststatus=2
-
-" Set vim to use 'short messages'.
-" set shortmess=a
-
-" Insert two spaces after a period with every joining of lines.
-" set joinspaces
 
 " showmatch: Show the matching bracket for the last ')'?
 set showmatch
@@ -171,33 +160,11 @@ let c_comment_strings=1
 
 set hlsearch  " highlight matches
 
-"set hl=l:Visual " make highlights easier to see
-
 " Commands for :Explore
 let g:explVertical=1    " open vertical split winow
 let g:explSplitRight=1  " Put new window to the right of the explorer
 let g:explStartRight=0  " new windows go to right of explorer window
 
-
-if has("gui_running")
-  set go=gmr
-  au InsertEnter * hi statusline ctermfg=white ctermbg=darkred gui=bold
-  au InsertLeave * hi statusline ctermfg=black ctermbg=gray gui=bold
-  " 2 for the status line.
-  set cmdheight=2
-  " add columns for the Project plugin
-  set columns=110
-  " enable use of mouse
-  set mouse=a
-  " for the TOhtml command
-  let html_use_css=1
-  au InsertEnter * hi statusline ctermfg=white ctermbg=darkred gui=bold
-  au InsertLeave * hi statusline ctermfg=black ctermbg=gray gui=bold
-  " Switch syntax highlighting on, when the terminal has colors
-  " Also switch on highlighting the last used search pattern.
-  syntax on
-  set hlsearch
-endif
 
 " ************************************************************************
 " C O M M A N D S
@@ -241,7 +208,7 @@ map <Leader>bn :bnext<CR>
 
 map <C-h> <Esc>:tabprev<CR>
 map <C-l> <Esc>:tabnext<CR>
-map <C-n> <Esc>:tabnew <Enter>
+map <C-t> <Esc>:tabnew <Enter>
 
 " Select all.
 map <c-a> ggVG
