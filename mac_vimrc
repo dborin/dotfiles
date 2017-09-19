@@ -1,4 +1,4 @@
-" Last-modified: Wed Sep 13, 2017 10:20:22 PDT
+" Last-modified: Tue Sep 19, 2017 12:01:03 PDT
 
 " Put swapfiles into their own directory
 set directory=$HOME/.vim/swapfiles/
@@ -48,7 +48,7 @@ nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
 set shiftwidth=4
 
 " Set 4 spaces for stops
-set tabstop=2
+set tabstop=4
 
 " Spaces instead of tabs
 set expandtab
@@ -115,10 +115,28 @@ set smartcase
 " smart search (override 'ic' when pattern has uppers)
 set scs
 
+
+set statusline=%F%m%r%h%w\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [LEN=%L]\ %4l,%02c%2V\ %p%%
+
 inoremap jk <Esc>
 imap hh =>
 imap jj ->
 imap uu _
+
+" Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes':   [],'passive_filetypes': [] }
+noremap <C-w>e :SyntasticCheck<CR>
+noremap <C-w>m :SyntasticToggleMode<CR>
+noremap <C-w>r :SyntasticReset<CR>
 
 " Setup NERDtree
 let NERDTreeShowHidden=1
@@ -130,7 +148,7 @@ map <C-x> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Set status line
-set statusline=%F%m%r%h%w\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [LEN=%L]\ %4l,%02c%2V\ %p%%
+" set statusline=%F%m%r%h%w\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [LEN=%L]\ %4l,%02c%2V\ %p%% %#warningmsg# %{SyntasticStatuslineFlag()}
 
 " now set it up to change the status line based on mode
 au InsertEnter * hi statusline ctermfg=white ctermbg=darkred gui=bold
@@ -253,24 +271,6 @@ augroup myvimrc
     au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so ~/.vimrc | if has('gui_running') | so ~/.gvimrc | endif
 augroup END
 
-" GUI ONLY type stuff.
-if has("gui")
-  :menu &MyVim.Current\ File.Convert\ Format.To\ Dos :set fileformat=dos<cr> :w<cr>
-  :menu &MyVim.Current\ File.Convert\ Format.To\ Unix :set fileformat=unix<cr> :w<cr>
-  :menu &MyVim.Current\ File.Remove\ Trailing\ Spaces\ and\ Tabs :%s/[	]*$//g<cr>
-  :menu &MyVim.Current\ File.Remove\ Ctrl-M :%s/^M//g<cr>
-  :menu &MyVim.Current\ File.Remove\ All\ Tabs :retab<cr>
-  :menu &MyVim.Current\ File.To\ HTML :runtime! syntax/2html.vim<cr>
-  :amenu &MyVim.Insert.Last\ &Modified<Tab>,L <Esc><Esc>:let @z=TimeStamp()<CR>"zpa
-  :amenu &MyVim.-SEP1- <nul>
-  :amenu &MyVim.&Global\ Settings.Toggle\ Display\ Unprintables<Tab>:set\ list!	:set list!<CR>
-  :amenu &MyVim.-SEP2- <nul>
-  :amenu &MyVim.&Project :Project<CR>
-
-  " hide the mouse when characters are typed
-  set mousehide
-endif
-
 " Show trailing whitespace or tag/space in blinding red
 highlight ExtraWhitespace ctermbg=red guibg=red
 au ColorScheme * highlight ExtraWhitespace guibg=red
@@ -284,8 +284,6 @@ au BufWinLeave * call clearmatches()
 "
 abbr #b /************************************************************************
 abbr #e  ************************************************************************/
-
-" abbr hosts C:\WINNT\system32\drivers\etc\hosts
 
 " abbreviation to manually enter a timestamp. Just type LMTS in insert mode
 iab LMTS <C-R>=TimeStamp()<CR>
