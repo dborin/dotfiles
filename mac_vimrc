@@ -1,4 +1,4 @@
-" Last-modified: Tue Sep 19, 2017 12:01:03 PDT
+" Last-modified: Fri Oct 27, 2017 15:02:56 PDT
 
 " Put swapfiles into their own directory
 set directory=$HOME/.vim/swapfiles/
@@ -63,16 +63,16 @@ set copyindent
 set selectmode=mouse
 
 " set total line length
-set textwidth=140
+set textwidth=80
 
 " For Python
-autocmd FileType python set ts=4 sw=4 et textwidth=140
+autocmd FileType python set ts=4 sw=4 et textwidth=80
 
 " For Ruby
-autocmd FileType ruby set ts=4 sw=4 et textwidth=140
+autocmd FileType ruby set ts=4 sw=4 et textwidth=80
 
 " For Text
-autocmd FileType text set textwidth=140
+autocmd FileType text set textwidth=80
 
 " For Gherkin
 au Bufread,BufNewFile *.feature set filetype=gherkin
@@ -304,7 +304,7 @@ iab YDATETIME <c-r>=strftime(": %a %b %d, %Y %H:%M:%S %Z")<cr>
 "  F U N C T I O N S
 "
 
-" Highlight lines over 140 columns
+" Highlight lines over 80 columns
 function! LongLines()
     if has('matchadd')
         :au BufWinEnter * let w:m1=matchadd('Search', '\%<101v.\%>140v', -1)
