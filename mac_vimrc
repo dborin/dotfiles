@@ -1,4 +1,4 @@
-" Last-modified: Fri Oct 27, 2017 15:02:56 PDT
+" Last-modified: Fri Oct 27, 2017 15:38:33 PDT
 
 " Put swapfiles into their own directory
 set directory=$HOME/.vim/swapfiles/
@@ -115,8 +115,15 @@ set smartcase
 " smart search (override 'ic' when pattern has uppers)
 set scs
 
-
+" set status line
 set statusline=%F%m%r%h%w\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [LEN=%L]\ %4l,%02c%2V\ %p%%
+
+" now set it up to change the status line based on mode
+au InsertEnter * hi statusline ctermfg=white ctermbg=darkred gui=bold
+au InsertLeave * hi statusline ctermfg=white ctermbg=darkgray gui=bold
+
+" Always display a status line at the bottom of the window
+set laststatus=2
 
 inoremap jk <Esc>
 imap hh =>
@@ -146,16 +153,6 @@ map <C-x> :NERDTreeToggle<CR>
 " Close vim even if NERDTree is the only thing open
 " autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-" Set status line
-" set statusline=%F%m%r%h%w\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [LEN=%L]\ %4l,%02c%2V\ %p%% %#warningmsg# %{SyntasticStatuslineFlag()}
-
-" now set it up to change the status line based on mode
-au InsertEnter * hi statusline ctermfg=white ctermbg=darkred gui=bold
-au InsertLeave * hi statusline ctermfg=white ctermbg=darkgray gui=bold
-
-" Always display a status line at the bottom of the window
-set laststatus=2
 
 " showmatch: Show the matching bracket for the last ')'?
 set showmatch
