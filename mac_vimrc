@@ -1,4 +1,4 @@
-" Last-modified: Fri Oct 27, 2017 17:05:33 PDT
+" Last-modified: Fri Oct 27, 2017 17:15:43 PDT
 
 " Put swapfiles into their own directory
 set directory=$HOME/.vim/swapfiles/
@@ -64,7 +64,6 @@ set selectmode=mouse
 
 " set total line length
 set textwidth=80
-set colorcolumn=80
 
 " highlight ColorColumn ctermbg=lightgrey
 
@@ -308,14 +307,17 @@ function! LongLines()
         let s:activatedh = 1
         hi LineProximity ctermfg=white ctermbg=gray
         hi LineOverflow  ctermfg=white ctermbg=darkred
-        let w:m1=matchadd('LineProximity', '\%<85v.\%>80v', -1)
+        hi ColorColumn ctermbg=gray
+        let w:m1=matchadd('LineProximity', '\%<85v.\%>81v', -1)
         let w:m2=matchadd('LineOverflow', '\%>84v.\+', -1)
+        set colorcolumn=81
     else
         let s:activatedh = 0
         hi LineProximity ctermfg=NONE ctermbg=NONE
         hi LineOverflow  ctermfg=NONE ctermbg=NONE
-        let w:m1=matchadd('LineProximity', '\%<85v.\%>80v', -1)
+        let w:m1=matchadd('LineProximity', '\%<85v.\%>81v', -1)
         let w:m2=matchadd('LineOverflow', '\%>84v.\+', -1)
+        set colorcolumn&vim
     endif
 endfunction
 
