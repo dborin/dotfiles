@@ -1,4 +1,4 @@
-" Last-modified: Fri Oct 27, 2017 15:38:33 PDT
+" Last-modified: Fri Oct 27, 2017 17:05:33 PDT
 
 " Put swapfiles into their own directory
 set directory=$HOME/.vim/swapfiles/
@@ -64,6 +64,9 @@ set selectmode=mouse
 
 " set total line length
 set textwidth=80
+set colorcolumn=80
+
+" highlight ColorColumn ctermbg=lightgrey
 
 " For Python
 autocmd FileType python set ts=4 sw=4 et textwidth=80
@@ -120,15 +123,12 @@ set statusline=%F%m%r%h%w\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [LEN=%L]\ 
 
 " now set it up to change the status line based on mode
 au InsertEnter * hi statusline ctermfg=white ctermbg=darkred gui=bold
-au InsertLeave * hi statusline ctermfg=white ctermbg=darkgray gui=bold
+au InsertLeave * hi statusline ctermfg=darkgray ctermbg=white gui=bold
 
 " Always display a status line at the bottom of the window
 set laststatus=2
 
 inoremap jk <Esc>
-imap hh =>
-imap jj ->
-imap uu _
 
 " Syntastic
 set statusline+=%#warningmsg#
@@ -252,8 +252,8 @@ if has("autocmd")
     \ endif
 
   " Normally don't automatically format 'text' as it is typed, only do this
-  " with comments, at 140 characters.
-  au BufNewFile,BufEnter *.c,*.h,*.java,*.jsp,*.sh,*.bash,*.pl,*.cgi,*.rb,*.py set formatoptions-=t tw=140
+  " with comments, at 80 characters.
+  au BufNewFile,BufEnter *.c,*.h,*.java,*.jsp,*.sh,*.bash,*.pl,*.cgi,*.rb,*.py set formatoptions-=t tw=80
 
   " add an autocommand to update an existing time stamp when writing the file
   " It uses the functions above to replace the time stamp and restores cursor
@@ -302,13 +302,20 @@ iab YDATETIME <c-r>=strftime(": %a %b %d, %Y %H:%M:%S %Z")<cr>
 "
 
 " Highlight lines over 80 columns
+let s:activatedh = 0
 function! LongLines()
-    if has('matchadd')
-        :au BufWinEnter * let w:m1=matchadd('Search', '\%<101v.\%>140v', -1)
-        :au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>140v.\+', -1)
+    if s:activatedh == 0
+        let s:activatedh = 1
+        hi LineProximity ctermfg=white ctermbg=gray
+        hi LineOverflow  ctermfg=white ctermbg=darkred
+        let w:m1=matchadd('LineProximity', '\%<85v.\%>80v', -1)
+        let w:m2=matchadd('LineOverflow', '\%>84v.\+', -1)
     else
-        :au BufRead,BufNewFile * syntax match Search /\%<101v.\%>140v/
-        :au BufRead,BufNewFile * syntax match ErrorMsg /\%>140v.\+/
+        let s:activatedh = 0
+        hi LineProximity ctermfg=NONE ctermbg=NONE
+        hi LineOverflow  ctermfg=NONE ctermbg=NONE
+        let w:m1=matchadd('LineProximity', '\%<85v.\%>80v', -1)
+        let w:m2=matchadd('LineOverflow', '\%>84v.\+', -1)
     endif
 endfunction
 
@@ -357,4 +364,5 @@ endfunction
 
 command! -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
 command! -bar LongLines call LongLines()
+nnoremap hh :LongLines<CR>
 command! -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
