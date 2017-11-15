@@ -1,7 +1,7 @@
 dotfiles
 -----------------------------
 
-###For my VIM install
+### For my VIM install
 
 * Update VIM to 8.x
     * For MacOS, use `brew install vim`
@@ -14,9 +14,14 @@ dotfiles
     * On MacOS -- use `pip install pylint`
     * On Ubuntu -- use `sudo apt-get install pylint`
 
-###Memory list for what I have installed on my Mac
+### Memory list for what I have installed on my Mac
 
 * PrivateInternetAccess
 * MuteMyMic
+   * [https://apple.stackexchange.com/questions/175215/how-do-i-assign-a-keyboard-shortcut-to-an-applescript-i-wrote](https://apple.stackexchange.com/questions/175215/how-do-i-assign-a-keyboard-shortcut-to-an-applescript-i-wrote)
+       
+       For the Automator script (workflow)
+       
+         tell application "System Events" to key code 96 using {option down}
 * Alfred
 * Sophos
