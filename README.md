@@ -13,3 +13,10 @@ dotfiles
 * Install pylint
     * On MacOS -- use `pip install pylint`
     * On Ubuntu -- use `sudo apt-get install pylint`
+
+###Memory list for what I have installed on my Mac
+
+* PrivateInternetAccess
+* MuteMyMic
+* Alfred
+* Sophos
