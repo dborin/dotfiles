@@ -25,3 +25,4 @@ dotfiles
          tell application "System Events" to key code 96 using {option down}
 * Alfred
 * Sophos
+* [Dropsec and encfs](https://webdiary.com/tag/dropsec/)
