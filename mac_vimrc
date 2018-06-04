@@ -1,4 +1,4 @@
-" Last-modified: Fri Oct 27, 2017 17:15:43 PDT
+" Last-modified: Fri May 18, 2018 13:50:17 PDT
 
 " Put swapfiles into their own directory
 set directory=$HOME/.vim/swapfiles/
@@ -122,27 +122,15 @@ set statusline=%F%m%r%h%w\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [LEN=%L]\ 
 
 " now set it up to change the status line based on mode
 au InsertEnter * hi statusline ctermfg=white ctermbg=darkred gui=bold
-au InsertLeave * hi statusline ctermfg=darkgray ctermbg=white gui=bold
+au InsertLeave * hi statusline ctermfg=darkgray ctermbg=yellow gui=bold
+
+" Automatically close preview windows when autocomplete done
+autocmd CompleteDone * pclose
 
 " Always display a status line at the bottom of the window
 set laststatus=2
 
 inoremap jk <Esc>
-
-" Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-
-let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes':   [],'passive_filetypes': [] }
-noremap <C-w>e :SyntasticCheck<CR>
-noremap <C-w>m :SyntasticToggleMode<CR>
-noremap <C-w>r :SyntasticReset<CR>
 
 " Setup NERDtree
 let NERDTreeShowHidden=1
@@ -152,6 +140,9 @@ map <C-x> :NERDTreeToggle<CR>
 " Close vim even if NERDTree is the only thing open
 " autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" Open NERDtree if a file isn't specified at open
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 " showmatch: Show the matching bracket for the last ')'?
 set showmatch
@@ -275,6 +266,13 @@ au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 au InsertLeave * match ExtraWhiteSpace /\s\+$/
 au BufWinLeave * call clearmatches()
 
+" Use F5 to open .md files is Chrome.  Needs the Markdown Preview Plugin
+" https://chrome.google.com/webstore/detail/markdown-preview
+"
+autocmd BufEnter *.md exe 'noremap <F5> :! /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome %:p<CR>'
+
+autocmd FileType ruby,python,sh let b:vcm_tab_complete = "omni"
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " ************************************************************************
 " A B B R E V I A T I O N S
 "
@@ -366,5 +364,5 @@ endfunction
 
 command! -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
 command! -bar LongLines call LongLines()
-nnoremap hh :LongLines<CR>
+nnoremap mw :LongLines<CR>
 command! -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
