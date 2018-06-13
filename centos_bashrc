@@ -87,9 +87,7 @@ function git_color {
   local DARK_GREY="\033[0:90m"
   local LIGHT_GREY="\033[0;37m"
 
-  if [[ $git_status =~ "nothing to commit, working tree clean" ]]; then
-    echo -e $DARK_GREY
-  elif [[ $git_status =~ "Changes not staged for commit" ]]; then
+  if [[ $git_status =~ "Changes not staged for commit" ]]; then
     echo -e $LIGHT_GREEN
   elif [[ $git_status =~ "Changes to be committed" ]]; then
     echo -e $YELLOW
@@ -97,6 +95,8 @@ function git_color {
     echo -e $LIGHT_MAGENTA
   elif [[ $git_status =~ "nothing added to commit but untracked files present" ]]; then
     echo -e $CYAN
+  elif [[ $git_status =~ "nothing to commit, working tree clean" ]]; then
+    echo -e $DARK_GREY
   else
     echo -e $LIGHT_RED
   fi
