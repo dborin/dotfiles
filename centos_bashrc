@@ -58,6 +58,7 @@ LIGHT_GREEN="\033[1;32m"
 MAGENTA="\033[0;35m"
 LIGHT_MAGENTA="\033[1;35m"
 WHITE="\033[1;37m"
+DARK_GREY="\033[0:90m"
 LIGHT_GRAY="\033[0;37m"
 DEFAULT="\033[0m"
 
@@ -72,8 +73,22 @@ function get_venv {
 function git_color {
   local git_status="$(git status 2> /dev/null)"
 
+  local BLUE="\033[0;97;44m"
+  local LIGHT_BLUE="\033[1;34m"
+  local CYAN="\033[0;30;106m"
+  local YELLOW="\033[0;30;103m"
+  local RED="\033[0;31m"
+  local LIGHT_RED="\033[1;41m"
+  local GREEN="\033[0;32m"
+  local LIGHT_GREEN="\033[0;30;102m"
+  local MAGENTA="\033[0;30;45m"
+  local LIGHT_MAGENTA="\033[0;30;105m"
+  local WHITE="\033[1;37m"
+  local DARK_GREY="\033[0:90m"
+  local LIGHT_GREY="\033[0;37m"
+
   if [[ $git_status =~ "nothing to commit, working tree clean" ]]; then
-    echo -e $LIGHT_GRAY
+    echo -e $DARK_GREY
   elif [[ $git_status =~ "Changes not staged for commit" ]]; then
     echo -e $LIGHT_GREEN
   elif [[ $git_status =~ "Changes to be committed" ]]; then
@@ -83,7 +98,7 @@ function git_color {
   elif [[ $git_status =~ "nothing added to commit but untracked files present" ]]; then
     echo -e $CYAN
   else
-    echo -e $BG_LIGHT_RED
+    echo -e $LIGHT_RED
   fi
 }
 
@@ -107,47 +122,36 @@ function poptart {
 }
 
 function bigtart {
-    oldpwd=$PWD
+    local oldpwd=$PWD
     dhkill && cd $HOME/work/designhub/dhui && git pull && npm install && bower install && cd ../django && pip install -q -r requirements.txt -r requirements_devel.txt && repop $@ && dhstart
     cd $oldpwd
 }
 
 function reset-dh-db {
+    local old_dir=$PWD
     dhkill
     sleep 3
     if [[ -z $1 ]]; then
-        $HOME/work/scripts/import_migrate_pgdump.sh -f $HOME/work/python_tests/data/current.pgdump -m
+        $HOME/work/scripts/import_migrate_pgdump.sh -f $HOME/work/designhub_python_tests/data/current.pgdump
     else
-        $HOME/work/scripts/import_migrate_pgdump.sh -f $1 -m
+        $HOME/work/scripts/import_migrate_pgdump.sh -f $1
     fi
     sleep 2
     dhstart
+    cd $old_dir
 }
 
 function rollback-dh {
-    old_dir=$PWD
-    if [[ -z $1 ]]; then
-        echo -e "\nYou didn't say which git branch (version) you needed"
-        cd $old_dir
-        return 13
-    fi
+    local old_dir=$PWD
     dhkill
     sleep 3
-    cd $HOME/work/designhub
-    git checkout $1
-    cd $HOME/work/designhub/django
-    pip install -r requirements.txt -r requirements_devel.txt
-    cd $HOME/work/designhub/dhui
-    rm -fr app/bower_components node_modules
-    npm install
-    bower install
-    if [[ -z $2 ]]; then
-        $HOME/work/scripts/import_migrate_pgdump.sh -f $HOME/work/python_tests/data/current.pgdump
+    if [[ -z $1 ]]; then
+        $HOME/work/scripts/import_migrate_pgdump.sh -f $HOME/work/designhub_python_tests/data/current.pgdump -R
     else
-        $HOME/work/scripts/import_migrate_pgdump.sh -f $2
+        $HOME/work/scripts/import_migrate_pgdump.sh -f $1 -R
     fi
-    django-admin rebuild_index --noinput
-    dhstart
+    sleep 2
+    dhstartup -d /home/david/work/designhub -g -m
     cd $old_dir
 }
 
