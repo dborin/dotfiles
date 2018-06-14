@@ -1,4 +1,5 @@
 # .bashrc
+PROMPT_COMMAND=__command_prompt
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
@@ -102,12 +103,15 @@ function git_color {
   fi
 }
 
-function proml {
-#PS1="$GREEN(\$(get_venv))$DEFAULT[$WHITE\u@$YELLOW\h$DEFAULT] $LIGHT_BLUE\w \$(git_color)\$(parse_git_branch)\n$DEFAULT\$ "
-PS1="\[$GREEN\](\$(get_venv))\[$DEFAULT\][\[$WHITE\]\u@\[$YELLOW\]\h\[$DEFAULT\]] \[$LIGHT_BLUE\]\w\[$DEFAULT\] \$(git_color)\$(parse_git_branch)\[$DEFAULT\]\n\\$ "
+function __command_prompt {
+  local EXIT="$?"
+  if [[ "$EXIT" != 0 ]]; then
+    PS1="\[$GREEN\](\$(get_venv))\[$DEFAULT\][\[$WHITE\]\u@\[$YELLOW\]\h\[$DEFAULT\]] \[$LIGHT_BLUE\]\w\[$DEFAULT\] \$(git_color)\$(parse_git_branch)\[$DEFAULT\]\n\[$RED\]$EXIT↵\[$DEFAULT\] \\$ "
+  else
+    PS1="\[$GREEN\](\$(get_venv))\[$DEFAULT\][\[$WHITE\]\u@\[$YELLOW\]\h\[$DEFAULT\]] \[$LIGHT_BLUE\]\w\[$DEFAULT\] \$(git_color)\$(parse_git_branch)\[$DEFAULT\]\n\\$ "
+  fi
+  #PS1="$GREEN(\$(get_venv))$DEFAULT[$WHITE\u@$YELLOW\h$DEFAULT] $LIGHT_BLUE\w \$(git_color)\$(parse_git_branch)\n$DEFAULT\$ "
 }
-
-proml
 
 function repop {
     if [[ -n $@ ]];then
